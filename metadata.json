@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Goldie Hub",
+  "description": "A comprehensive companion app for new golden retriever owners to track training milestones and search for pet-friendly apartments.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
