@@ -6,6 +6,8 @@ export interface Milestone {
   recentProgress: string;
   icon: string;
   color: 'blue' | 'purple' | 'orange' | 'green';
+  whatToWorkOn?: string;
+  howToWorkOn?: string;
 }
 
 export interface Apartment {
@@ -20,6 +22,7 @@ export interface Apartment {
   petTag: string;
   petIcon: string;
   createdAt: number;
+  description?: string;
 }
 
 export interface Resource {
@@ -31,10 +34,12 @@ export interface Resource {
 }
 
 export interface DailyLogEntry {
+  id: string;
   time: string;
   label: string;
   type: 'Meal' | 'Sleep' | 'Pee' | 'Poop';
   detail?: string;
+  image?: string;
 }
 
 export interface ChecklistItem {
@@ -42,4 +47,11 @@ export interface ChecklistItem {
   title: string;
   content: string;
   completed: boolean;
+}
+
+export interface GalleryPhoto {
+  id: string;
+  url: string;
+  caption?: string;
+  timestamp: number;
 }

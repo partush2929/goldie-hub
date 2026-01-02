@@ -96,11 +96,12 @@ export const resources: Resource[] = [
   }
 ];
 
+// Added missing 'id' property to satisfy DailyLogEntry interface
 export const dailyTimeline: DailyLogEntry[] = [
-  { time: '10:45 AM', label: 'Went down for a nap', type: 'Sleep' },
-  { time: '10:15 AM', label: 'Potty: Pee', type: 'Pee', detail: '- Backyard' },
-  { time: '09:30 AM', label: 'Potty: Poop', type: 'Poop' },
-  { time: '08:00 AM', label: 'Breakfast (1.5 cups)', type: 'Meal' }
+  { id: 'log-1', time: '10:45 AM', label: 'Went down for a nap', type: 'Sleep' },
+  { id: 'log-2', time: '10:15 AM', label: 'Potty: Pee', type: 'Pee', detail: '- Backyard' },
+  { id: 'log-3', time: '09:30 AM', label: 'Potty: Poop', type: 'Poop' },
+  { id: 'log-4', time: '08:00 AM', label: 'Breakfast (1.5 cups)', type: 'Meal' }
 ];
 
 export const feedListings = [

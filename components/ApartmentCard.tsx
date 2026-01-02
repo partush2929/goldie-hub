@@ -4,17 +4,25 @@ import { Apartment } from '../types';
 
 interface ApartmentCardProps {
   apartment: Apartment;
+  onViewDetails: (apt: Apartment) => void;
+  onRemove: (id: string) => void;
 }
 
-const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment }) => {
+const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onViewDetails, onRemove }) => {
   return (
-    <div className="group flex flex-col rounded-xl bg-white border border-sage overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+    <div className="group flex flex-col rounded-xl bg-white border border-sage overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 relative">
       <div className="relative h-48 w-full overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
           style={{ backgroundImage: `url('${apartment.img}')` }}
         />
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 flex gap-2">
+          <button 
+            onClick={() => onRemove(apartment.id)}
+            className="size-8 rounded-full bg-white/90 backdrop-blur-sm text-red-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <span className="material-symbols-outlined text-sm">delete</span>
+          </button>
           <span className={`inline-flex items-center gap-1 rounded-full ${apartment.statusColor} px-3 py-1 text-xs font-bold text-white shadow-sm`}>
             <span className="material-symbols-outlined text-[14px]">{apartment.statusIcon}</span> {apartment.status}
           </span>
@@ -32,7 +40,10 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment }) => {
           <span className="material-symbols-outlined text-primary">{apartment.petIcon}</span>
           <span className="text-sm font-bold text-forest">{apartment.petTag}</span>
         </div>
-        <button className="mt-auto w-full rounded-full bg-forest text-white py-2.5 text-sm font-bold hover:opacity-90 transition-opacity shadow-md shadow-forest/10">
+        <button 
+          onClick={() => onViewDetails(apartment)}
+          className="mt-auto w-full rounded-full bg-forest text-white py-2.5 text-sm font-bold hover:opacity-90 transition-opacity shadow-md shadow-forest/10"
+        >
           View Details
         </button>
       </div>

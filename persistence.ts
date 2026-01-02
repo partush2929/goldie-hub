@@ -1,35 +1,111 @@
 
-import { Apartment, ChecklistItem } from './types';
-import { apartments as initialApartments } from './mockData';
+import { Apartment, ChecklistItem, DailyLogEntry, Milestone, GalleryPhoto } from './types';
+import { 
+  apartments as initialApartments, 
+  milestones as initialMilestones,
+  dailyTimeline as initialLogs 
+} from './mockData';
 
-const APARTMENTS_KEY = 'goldie_hub_apartments';
-const CHECKLIST_KEY = 'goldie_hub_checklist';
+const KEYS = {
+  APARTMENTS: 'goldie_db_apartments',
+  CHECKLIST: 'goldie_db_checklist',
+  LOGS: 'goldie_db_logs',
+  MILESTONES: 'goldie_db_milestones',
+  GALLERY: 'goldie_db_gallery'
+};
 
-export const storage = {
-  getApartments: (): Apartment[] => {
-    const data = localStorage.getItem(APARTMENTS_KEY);
-    if (!data) return initialApartments.map(a => ({ ...a, createdAt: Date.now() }));
-    return JSON.parse(data);
+export const db = {
+  // Apartments Collection
+  apartments: {
+    get: (): Apartment[] => {
+      const data = localStorage.getItem(KEYS.APARTMENTS);
+      if (!data) return initialApartments;
+      return JSON.parse(data);
+    },
+    add: (apt: Apartment) => {
+      const current = db.apartments.get();
+      const updated = [apt, ...current];
+      localStorage.setItem(KEYS.APARTMENTS, JSON.stringify(updated));
+      return updated;
+    },
+    update: (id: string, updates: Partial<Apartment>) => {
+      const current = db.apartments.get();
+      const updated = current.map(a => a.id === id ? { ...a, ...updates } : a);
+      localStorage.setItem(KEYS.APARTMENTS, JSON.stringify(updated));
+      return updated;
+    },
+    remove: (id: string) => {
+      const updated = db.apartments.get().filter(a => a.id !== id);
+      localStorage.setItem(KEYS.APARTMENTS, JSON.stringify(updated));
+      return updated;
+    }
   },
 
-  saveApartment: (apt: Apartment) => {
-    const current = storage.getApartments();
-    const updated = [apt, ...current];
-    localStorage.setItem(APARTMENTS_KEY, JSON.stringify(updated));
-    return updated;
+  // Daily Logs Collection
+  logs: {
+    get: (): DailyLogEntry[] => {
+      const data = localStorage.getItem(KEYS.LOGS);
+      if (!data) return initialLogs;
+      return JSON.parse(data);
+    },
+    add: (entry: DailyLogEntry) => {
+      const current = db.logs.get();
+      const updated = [entry, ...current];
+      localStorage.setItem(KEYS.LOGS, JSON.stringify(updated));
+      return updated;
+    },
+    remove: (id: string) => {
+      const updated = db.logs.get().filter(l => l.id !== id);
+      localStorage.setItem(KEYS.LOGS, JSON.stringify(updated));
+      return updated;
+    }
   },
 
-  getChecklist: (): ChecklistItem[] => {
-    const data = localStorage.getItem(CHECKLIST_KEY);
-    if (!data) return [
-      { id: 'prep-1', title: 'Before Arrival', content: 'Setup the crate in the bedroom, puppy-proof the living room (hide cords!), and buy high-value treats.', completed: false },
-      { id: 'prep-2', title: 'First Night Plan', content: 'Place a snuggle puppy toy in the crate. Set alarms for 2 AM and 5 AM potty breaks.', completed: false },
-      { id: 'prep-3', title: 'Vet & Health', content: 'Schedule first wellness exam. Bring vaccination records from breeder.', completed: false }
-    ];
-    return JSON.parse(data);
+  // Milestones Collection
+  milestones: {
+    get: (): Milestone[] => {
+      const data = localStorage.getItem(KEYS.MILESTONES);
+      if (!data) return initialMilestones;
+      return JSON.parse(data);
+    },
+    add: (m: Milestone) => {
+      const current = db.milestones.get();
+      const updated = [...current, m];
+      localStorage.setItem(KEYS.MILESTONES, JSON.stringify(updated));
+      return updated;
+    },
+    update: (id: string, updates: Partial<Milestone>) => {
+      const current = db.milestones.get();
+      const updated = current.map(m => 
+        m.id === id ? { ...m, ...updates } : m
+      );
+      localStorage.setItem(KEYS.MILESTONES, JSON.stringify(updated));
+      return updated;
+    },
+    remove: (id: string) => {
+      const updated = db.milestones.get().filter(m => m.id !== id);
+      localStorage.setItem(KEYS.MILESTONES, JSON.stringify(updated));
+      return updated;
+    }
   },
 
-  saveChecklist: (items: ChecklistItem[]) => {
-    localStorage.setItem(CHECKLIST_KEY, JSON.stringify(items));
+  // Gallery Collection
+  gallery: {
+    get: (): GalleryPhoto[] => {
+      const data = localStorage.getItem(KEYS.GALLERY);
+      if (!data) return [];
+      return JSON.parse(data);
+    },
+    add: (photo: GalleryPhoto) => {
+      const current = db.gallery.get();
+      const updated = [photo, ...current];
+      localStorage.setItem(KEYS.GALLERY, JSON.stringify(updated));
+      return updated;
+    },
+    remove: (id: string) => {
+      const updated = db.gallery.get().filter(p => p.id !== id);
+      localStorage.setItem(KEYS.GALLERY, JSON.stringify(updated));
+      return updated;
+    }
   }
 };
