@@ -106,27 +106,26 @@ const ApartmentView: React.FC = () => {
     setQuickNote('');
   };
 
-  const shortlist = sortedApartments.slice(0, 3);
-
   return (
-    <div className="flex-1 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 relative">
-      <div className="w-full max-w-[1200px] flex flex-col gap-10">
-        {/* Heading & Stats */}
-        <div className="flex flex-col lg:flex-row gap-8 justify-between items-start lg:items-end">
-          <div className="flex flex-col gap-2 max-w-xl">
-            <h2 className="text-4xl md:text-5xl font-black leading-tight tracking-tight text-forest">Finding Goldie's Home</h2>
-            <p className="text-lg text-forest/70 font-medium">Track your pet-friendly rental journey.</p>
+    <div className="flex-1 flex flex-col items-center py-6 md:py-12 px-4 sm:px-6 lg:px-8 relative max-w-[1200px] mx-auto w-full">
+      <div className="w-full flex flex-col gap-8 md:gap-12">
+        {/* Mobile-First Header */}
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-4xl md:text-6xl font-black leading-[1.1] tracking-tight text-forest">Housing Search</h2>
+            <p className="text-lg text-forest/60 font-medium">Finding the perfect den for Puppy.</p>
           </div>
-          <div className="flex gap-4 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+          
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
             {[
-              { label: 'Saved', val: apartments.length.toString(), icon: 'database' },
-              { label: 'Toured', val: apartments.filter(a => a.status === 'Touring').length.toString(), icon: 'directions_walk', primary: true },
-              { label: 'Applied', val: apartments.filter(a => a.status === 'Applied').length.toString(), icon: 'assignment_turned_in' }
+              { label: 'Found', val: apartments.length.toString(), icon: 'database' },
+              { label: 'Tours', val: apartments.filter(a => a.status === 'Touring').length.toString(), icon: 'directions_walk', primary: true },
+              { label: 'Apps', val: apartments.filter(a => a.status === 'Applied').length.toString(), icon: 'assignment_turned_in' }
             ].map((stat, idx) => (
-              <div key={idx} className="flex min-w-[140px] flex-1 flex-col items-start justify-center gap-1 rounded-xl bg-white border border-sage p-5 shadow-sm">
+              <div key={idx} className="flex min-w-[140px] flex-shrink-0 flex-col items-start justify-center gap-1 rounded-[2rem] bg-white border border-sage p-6 shadow-sm">
                 <div className={`flex items-center gap-2 ${stat.primary ? 'text-primary' : 'text-forest/60'}`}>
                   <span className="material-symbols-outlined text-[20px]">{stat.icon}</span>
-                  <p className="text-sm font-bold uppercase tracking-wider">{stat.label}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest">{stat.label}</p>
                 </div>
                 <p className="text-3xl font-black text-forest">{stat.val}</p>
               </div>
@@ -134,41 +133,38 @@ const ApartmentView: React.FC = () => {
           </div>
         </div>
 
-        {/* Shortlist */}
-        <section className="flex flex-col gap-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-sage pb-4">
-            <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">bookmark</span>
-              My Shortlist
-            </h3>
-            
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="flex items-center gap-2 bg-sage/30 px-3 py-1.5 rounded-full border border-sage/50">
-                <span className="material-symbols-outlined text-forest/50 text-sm">sort</span>
-                <select 
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  className="bg-transparent border-none text-xs font-bold text-forest focus:ring-0 cursor-pointer p-0 pr-6"
-                >
-                  <option value="latest">Latest Published</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                </select>
-              </div>
-
+        {/* Shortlist/List Section */}
+        <section className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between border-b border-sage pb-4">
+              <h3 className="text-2xl font-black flex items-center gap-3">
+                <span className="material-symbols-outlined text-primary text-3xl">favorite</span>
+                Shortlist
+              </h3>
               <button 
                 onClick={() => setShowModal(true)}
-                className="flex items-center gap-2 bg-forest text-white px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-forest/20 hover:scale-105 transition-all"
+                className="size-12 rounded-full bg-forest text-white flex items-center justify-center shadow-xl active:scale-90 transition-all"
               >
-                <span className="material-symbols-outlined text-sm">add</span> New Entry
+                <span className="material-symbols-outlined">add</span>
               </button>
+            </div>
+            
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+              {['latest', 'price-low', 'price-high'].map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => setSortOption(opt as SortOption)}
+                  className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-all whitespace-nowrap ${sortOption === opt ? 'bg-forest text-white border-forest' : 'bg-white text-forest/60 border-sage'}`}
+                >
+                  {opt.replace('-', ' ')}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shortlist.length > 0 ? (
-              shortlist.map(apt => (
+          <div className="flex flex-col gap-6">
+            {sortedApartments.length > 0 ? (
+              sortedApartments.map(apt => (
                 <ApartmentCard 
                   key={apt.id} 
                   apartment={apt} 
@@ -177,136 +173,93 @@ const ApartmentView: React.FC = () => {
                 />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center bg-sage/10 rounded-3xl border border-dashed border-sage">
-                <span className="material-symbols-outlined text-4xl text-sage mb-2">apartment</span>
-                <p className="text-forest/40 font-bold">Your database is empty.</p>
+              <div className="py-24 text-center bg-sage/10 rounded-[2.5rem] border-4 border-dashed border-sage px-8">
+                <span className="material-symbols-outlined text-6xl text-sage mb-4">apartment</span>
+                <p className="text-xl font-black text-forest/40">No listings found.</p>
+                <button onClick={() => setShowModal(true)} className="mt-4 text-primary font-black uppercase tracking-widest text-xs">Add your first one</button>
               </div>
             )}
           </div>
         </section>
-
-        {/* Database Explorer */}
-        <section className="flex flex-col rounded-xl bg-white border border-sage shadow-sm overflow-hidden mt-6">
-          <div className="p-5 border-b border-sage bg-white">
-            <h3 className="text-lg font-bold flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">storage</span> Full Database List
-            </h3>
-          </div>
-          <div className="p-4 overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap min-w-[800px]">
-               <thead className="bg-background-light text-forest/50">
-                 <tr>
-                    <th className="p-4 font-bold uppercase tracking-widest text-[10px]">Title</th>
-                    <th className="p-4 font-bold uppercase tracking-widest text-[10px]">Price</th>
-                    <th className="p-4 font-bold uppercase tracking-widest text-[10px]">Status</th>
-                    <th className="p-4 font-bold uppercase tracking-widest text-[10px]">Added</th>
-                    <th className="p-4 font-bold uppercase tracking-widest text-[10px] text-right">Actions</th>
-                 </tr>
-               </thead>
-               <tbody>
-                  {sortedApartments.map(apt => (
-                    <tr key={apt.id} className="border-b border-sage/30 hover:bg-sage/10 transition-colors">
-                       <td className="p-4 font-bold text-forest">{apt.title}</td>
-                       <td className="p-4 text-primary font-bold">{apt.price}</td>
-                       <td className="p-4">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-black text-white ${apt.statusColor}`}>{apt.status}</span>
-                       </td>
-                       <td className="p-4 text-forest/40 text-xs">{new Date(apt.createdAt).toLocaleDateString()}</td>
-                       <td className="p-4 text-right">
-                          <button onClick={() => setSelectedApartment(apt)} className="text-forest hover:text-primary mr-3 text-xs font-bold uppercase">Details</button>
-                          <button onClick={() => removeApartment(apt.id)} className="text-red-400 hover:text-red-600"><span className="material-symbols-outlined text-sm">delete</span></button>
-                       </td>
-                    </tr>
-                  ))}
-               </tbody>
-            </table>
-          </div>
-        </section>
       </div>
 
-      {/* Detail View Modal */}
+      {/* Optimized Detail Bottom Sheet / Modal */}
       {selectedApartment && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-forest/40 backdrop-blur-sm">
-           <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden border border-sage animate-in zoom-in-95">
-              <div className="relative h-64 w-full">
+        <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center p-0 md:p-4 bg-forest/50 backdrop-blur-md">
+           <div className="bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-full duration-400">
+              <div className="relative h-72 md:h-80 w-full">
                  <img src={selectedApartment.img} className="w-full h-full object-cover" alt={selectedApartment.title} />
-                 <button onClick={() => { setSelectedApartment(null); setShowScheduleForm(false); }} className="absolute top-4 right-4 size-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-forest">
+                 <button onClick={() => { setSelectedApartment(null); setShowScheduleForm(false); }} className="absolute top-6 right-6 size-12 rounded-full bg-white/95 shadow-xl flex items-center justify-center text-forest active:scale-90 transition-all">
                     <span className="material-symbols-outlined">close</span>
                  </button>
               </div>
-              <div className="p-8 flex flex-col gap-6 max-h-[70vh] overflow-y-auto">
-                 <div className="flex justify-between items-start">
-                    <div>
-                       <h2 className="text-3xl font-black text-forest">{selectedApartment.title}</h2>
-                       <p className="text-lg text-primary font-bold">{selectedApartment.price}<span className="text-sm font-normal text-forest/50">/mo</span></p>
+              <div className="p-8 flex flex-col gap-8 max-h-[60vh] overflow-y-auto">
+                 <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-start">
+                       <h2 className="text-3xl font-black text-forest leading-tight">{selectedApartment.title}</h2>
+                       <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white mt-1.5 ${selectedApartment.statusColor}`}>{selectedApartment.status}</span>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                       <span className={`px-4 py-1.5 rounded-full text-xs font-black text-white ${selectedApartment.statusColor}`}>{selectedApartment.status}</span>
-                       <span className="text-[10px] font-bold text-forest/40 uppercase">Added {new Date(selectedApartment.createdAt).toLocaleDateString()}</span>
+                    <p className="text-2xl font-black text-primary">{selectedApartment.price}<span className="text-sm font-normal text-forest/40">/month</span></p>
+                 </div>
+
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="p-5 rounded-[1.5rem] bg-sage/20 border border-sage/40 flex flex-col gap-1">
+                       <p className="text-[10px] font-black uppercase text-forest/40 tracking-[0.2em]">Layout</p>
+                       <p className="text-sm font-black text-forest">{selectedApartment.specs}</p>
+                    </div>
+                    <div className="p-5 rounded-[1.5rem] bg-sage/20 border border-sage/40 flex flex-col gap-1">
+                       <p className="text-[10px] font-black uppercase text-forest/40 tracking-[0.2em]">Pet Rules</p>
+                       <p className="text-sm font-black text-primary uppercase">{selectedApartment.petTag}</p>
                     </div>
                  </div>
 
-                 {/* Editable Quick Note Section */}
-                 <div className="flex flex-col gap-3 p-4 bg-background-light rounded-2xl border border-sage/30">
-                    <p className="text-[10px] font-bold uppercase text-forest/40 mb-1 tracking-widest">Logs & Personal Notes</p>
-                    <div className="flex gap-2 mb-2">
+                 {/* Quick Notes Section */}
+                 <div className="flex flex-col gap-4 p-6 bg-background-light rounded-[2rem] border border-sage/50">
+                    <p className="text-[10px] font-black uppercase text-forest/40 tracking-[0.2em]">Internal Logs</p>
+                    <div className="flex gap-2">
                        <input 
-                          className="flex-1 bg-white border-sage rounded-xl px-4 py-2 text-sm focus:ring-primary"
-                          placeholder="Add a note (e.g. 'Great balcony')..."
+                          className="flex-1 bg-white border-sage rounded-2xl h-12 px-5 text-sm font-bold focus:ring-primary focus:border-primary transition-all shadow-sm"
+                          placeholder="Add detail..."
                           value={quickNote}
                           onChange={(e) => setQuickNote(e.target.value)}
                        />
                        <button 
                           onClick={handleAddQuickNote}
                           disabled={!quickNote.trim()}
-                          className="bg-forest text-white px-4 rounded-xl text-xs font-bold disabled:opacity-50 hover:bg-forest/90 transition-all"
+                          className="bg-forest text-white px-6 rounded-2xl text-xs font-black disabled:opacity-50 active:scale-95 transition-all"
                        >
-                          Add Note
+                          LOG
                        </button>
                     </div>
                     {selectedApartment.description ? (
-                      <p className="text-sm text-forest/70 leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto">{selectedApartment.description}</p>
+                      <p className="text-sm text-forest/70 leading-relaxed font-medium whitespace-pre-wrap">{selectedApartment.description}</p>
                     ) : (
-                      <p className="text-xs text-forest/30 italic">No notes yet. Start tracking details about this apartment!</p>
+                      <p className="text-xs text-forest/30 italic text-center py-2">No notes logged yet.</p>
                     )}
                  </div>
 
-                 <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-2xl bg-sage/20 border border-sage/40">
-                       <p className="text-[10px] font-bold uppercase text-forest/40 mb-1">Configuration</p>
-                       <p className="text-sm font-bold text-forest">{selectedApartment.specs}</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-sage/20 border border-sage/40">
-                       <p className="text-[10px] font-bold uppercase text-forest/40 mb-1">Pet Policy</p>
-                       <p className="text-sm font-bold text-primary flex items-center gap-1">
-                          <span className="material-symbols-outlined text-sm">{selectedApartment.petIcon}</span>
-                          {selectedApartment.petTag}
-                       </p>
-                    </div>
-                 </div>
-
                  {showScheduleForm ? (
-                   <div className="flex flex-col gap-3 p-4 bg-sage/10 rounded-2xl border border-primary/20 animate-in slide-in-from-bottom-2">
-                      <p className="text-xs font-bold text-forest uppercase tracking-widest">Meeting Details</p>
+                   <div className="flex flex-col gap-4 p-6 bg-primary/5 rounded-[2rem] border-2 border-primary/20 animate-in slide-in-from-bottom-4">
+                      <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Scheduling View</p>
                       <textarea 
-                        className="bg-white border-sage rounded-xl p-3 text-sm focus:ring-primary"
-                        placeholder="e.g. Oct 25 at 2pm with Agent Sarah..."
+                        className="bg-white border-sage rounded-2xl p-4 text-sm font-bold focus:ring-primary min-h-[100px]"
+                        placeholder="Meeting time, agent name, or status..."
                         value={meetingInfo}
                         onChange={(e) => setMeetingInfo(e.target.value)}
                         autoFocus
                       />
-                      <div className="flex gap-2">
-                        <button onClick={handleScheduleViewing} className="flex-1 bg-primary text-white font-bold py-2.5 rounded-lg text-sm">Confirm Meeting</button>
-                        <button onClick={() => setShowScheduleForm(false)} className="px-4 bg-gray-100 text-forest font-bold py-2.5 rounded-lg text-sm">Cancel</button>
+                      <div className="flex gap-3">
+                        <button onClick={handleScheduleViewing} className="flex-1 bg-primary text-white h-14 rounded-2xl font-black text-sm active:scale-95 transition-all">CONFIRM</button>
+                        <button onClick={() => setShowScheduleForm(false)} className="px-6 h-14 rounded-2xl font-black text-sm text-forest/40">CANCEL</button>
                       </div>
                    </div>
                  ) : (
-                   <div className="flex gap-4">
-                      <button onClick={() => setShowScheduleForm(true)} className="flex-1 bg-forest text-white font-bold py-4 rounded-xl shadow-lg hover:bg-forest/90 transition-all">
-                        Schedule Viewing
+                   <div className="flex flex-col gap-4 pb-12 md:pb-0">
+                      <button onClick={() => setShowScheduleForm(true)} className="w-full bg-forest text-white h-16 rounded-2xl font-black text-lg shadow-2xl active:scale-95 transition-all">
+                        SCHEDULE VIEWING
                       </button>
-                      <button onClick={() => removeApartment(selectedApartment.id)} className="px-6 py-4 rounded-xl border border-red-100 text-red-500 font-bold hover:bg-red-50 transition-colors">
-                        Delete Listing
+                      <button onClick={() => removeApartment(selectedApartment.id)} className="w-full h-14 rounded-2xl text-red-400 font-black text-xs uppercase tracking-widest active:bg-red-50 transition-all">
+                        DELETE LISTING
                       </button>
                    </div>
                  )}
@@ -315,65 +268,36 @@ const ApartmentView: React.FC = () => {
         </div>
       )}
 
-      {/* Add Entry Modal */}
+      {/* Add Entry Modal - Optimized for mobile typing */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-forest/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-sage">
-            <div className="p-6 border-b border-sage flex justify-between items-center bg-background-light">
-              <h3 className="text-xl font-black text-forest">Add to Database</h3>
-              <button onClick={() => setShowModal(false)} className="text-forest/40 hover:text-forest transition-colors">
+        <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center p-0 md:p-4 bg-forest/50 backdrop-blur-md">
+          <div className="bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-md shadow-2xl overflow-hidden animate-in slide-in-from-bottom-full duration-400">
+            <div className="p-8 border-b border-sage flex justify-between items-center bg-background-light">
+              <h3 className="text-2xl font-black text-forest">Add Property</h3>
+              <button onClick={() => setShowModal(false)} className="size-10 flex items-center justify-center rounded-full bg-gray-100 text-forest/40 hover:text-forest transition-colors">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <form onSubmit={handlePublish} className="p-6 flex flex-col gap-4">
-               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-forest/60 uppercase">Property Title</label>
-                <input 
-                  required
-                  placeholder="e.g. Skyline Apartments"
-                  className="bg-sage/20 border-sage rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all"
-                  value={newApt.title}
-                  onChange={e => setNewApt({...newApt, title: e.target.value})}
-                />
+            <form onSubmit={handlePublish} className="p-8 flex flex-col gap-6 pb-16 md:pb-8">
+               <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-black text-forest/40 uppercase tracking-[0.2em]">Address / Title</label>
+                <input required placeholder="Skyline Lofts" className="bg-sage/10 border-sage rounded-2xl h-14 px-5 text-base font-black focus:ring-primary focus:border-primary" 
+                       value={newApt.title} onChange={e => setNewApt({...newApt, title: e.target.value})} />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-forest/60 uppercase">Monthly Price</label>
-                  <input 
-                    required
-                    type="number"
-                    placeholder="2500"
-                    className="bg-sage/20 border-sage rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all"
-                    value={newApt.price}
-                    onChange={e => setNewApt({...newApt, price: e.target.value})}
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-black text-forest/40 uppercase tracking-[0.2em]">Rent ($)</label>
+                  <input required type="number" placeholder="2400" className="bg-sage/10 border-sage rounded-2xl h-14 px-5 text-base font-black focus:ring-primary" 
+                         value={newApt.price} onChange={e => setNewApt({...newApt, price: e.target.value})} />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-forest/60 uppercase">Specs</label>
-                  <input 
-                    required
-                    placeholder="2 Bed • 1 Bath"
-                    className="bg-sage/20 border-sage rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all"
-                    value={newApt.specs}
-                    onChange={e => setNewApt({...newApt, specs: e.target.value})}
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-black text-forest/40 uppercase tracking-[0.2em]">Config</label>
+                  <input required placeholder="1B/1B" className="bg-sage/10 border-sage rounded-2xl h-14 px-5 text-base font-black focus:ring-primary" 
+                         value={newApt.specs} onChange={e => setNewApt({...newApt, specs: e.target.value})} />
                 </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-forest/60 uppercase">Initial Notes</label>
-                <textarea 
-                  rows={2}
-                  placeholder="Great sunlight, near park..."
-                  className="bg-sage/20 border-sage rounded-xl px-4 py-2 text-sm focus:ring-primary"
-                  value={newApt.description}
-                  onChange={e => setNewApt({...newApt, description: e.target.value})}
-                />
-              </div>
-              <button 
-                type="submit"
-                className="mt-4 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
-              >
-                Save Listing
+              <button type="submit" className="w-full bg-primary text-white h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4">
+                SAVE TO DATABASE
               </button>
             </form>
           </div>

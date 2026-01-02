@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import BottomNav from './components/BottomNav';
 import HomeView from './views/HomeView';
 import TrainingView from './views/TrainingView';
 import ApartmentView from './views/ApartmentView';
@@ -10,7 +11,7 @@ import ApartmentView from './views/ApartmentView';
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-background-light selection:bg-primary selection:text-white">
+      <div className="min-h-screen flex flex-col bg-background-light selection:bg-primary selection:text-white pb-16 md:pb-0">
         <Navbar />
         <main className="flex-1">
           <Routes>
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           </Routes>
         </main>
         <Footer />
+        <BottomNav />
       </div>
     </Router>
   );
